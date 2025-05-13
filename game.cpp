@@ -3,6 +3,8 @@
 #include <cstdlib>  // for rand()
 #include <ctime>    // for srand(time(0))
 #include "game-settings.h"
+#include "Display.cpp"
+
 
 
 
@@ -14,9 +16,9 @@ int Game::rollDice() {
     return (rand() % 6) + 1; // resulting 1-6
 }
 
-bool Game::tossCoin() {
-    return (rand() % 2) == 0; // 50% true/false
-}
+// bool Game::tossCoin() {
+//     return (rand() % 2) == 0; // 50% true/false
+// }
 
 void Game::start() {
     srand(time(0)); //  random seed
@@ -142,25 +144,32 @@ void Game::start() {
 
 void Game::turnswitch() {
     clearConsole();
+    BattleScreen screen;
+    Player* opponent = (currentTurn == &Player1) ? &Player2 : &Player1;
+    
+        screen.updateBattleScreen(
+        "Player 1", opponent->getTeam()[opponent->getCurrent()].getart(),opponent->getTeam()[opponent->getCurrent()].getName(), opponent->getTeam()[opponent->getCurrent()].getHp(),  // ฝั่งศัตรู
+        "Player 2", currentTurn->getTeam()[currentTurn->getCurrent()].getart(),currentTurn->getTeam()[currentTurn->getCurrent()].getName(), currentTurn->getTeam()[currentTurn->getCurrent()].getHp() // ฝั่งเรา
+    );
     std::string choose;
     std::cout << currentTurn->getName() << " and " 
                                         <<currentTurn->getTeam()[currentTurn->getCurrent()].getName() 
                                         <<"'s Turn!"<<std::endl;
 
-    // ----- Add player's and Oponent's stats -----
-    Player* opponent = (currentTurn == &Player1) ? &Player2 : &Player1;
+    // // ----- Add player's and Oponent's stats -----
+    // Player* opponent = (currentTurn == &Player1) ? &Player2 : &Player1;
 
-    std::cout << "\n--- Status ---\n";
-    std::cout << currentTurn->getName() << ": " 
-                << currentTurn->getTeam()[currentTurn->getCurrent()].getName()
-                << " (" << currentTurn->getTeam()[currentTurn->getCurrent()].getType() << ") "
-                << "HP: " << currentTurn->getTeam()[currentTurn->getCurrent()].getHp() << "\n";
+    // std::cout << "\n--- Status ---\n";
+    // std::cout << currentTurn->getName() << ": " 
+    //             << currentTurn->getTeam()[currentTurn->getCurrent()].getName()
+    //             << " (" << currentTurn->getTeam()[currentTurn->getCurrent()].getType() << ") "
+    //             << "HP: " << currentTurn->getTeam()[currentTurn->getCurrent()].getHp() << "\n";
 
-    std::cout << opponent->getName() << ": " 
-                << opponent->getTeam()[opponent->getCurrent()].getName()
-                << " (" << opponent->getTeam()[opponent->getCurrent()].getType() << ") "
-                << "HP: " << opponent->getTeam()[opponent->getCurrent()].getHp() << "\n";
-    std::cout << "-----------------\n\n";
+    // std::cout << opponent->getName() << ": " 
+    //             << opponent->getTeam()[opponent->getCurrent()].getName()
+    //             << " (" << opponent->getTeam()[opponent->getCurrent()].getType() << ") "
+    //             << "HP: " << opponent->getTeam()[opponent->getCurrent()].getHp() << "\n";
+    // std::cout << "-----------------\n\n";
 
 
 

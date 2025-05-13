@@ -57,7 +57,7 @@ private:
 
 class Monster :public baseObject{   // second inheritance
 public:
-    Monster(std::string name, std::string type, int HP, std::vector<Move> moves); // Constructor
+    Monster(std::string name, std::string type, int HP, std::vector<Move> moves , std::vector<std::string> art); // Constructor
     void takeDamage(int amount);
     //---------------------------------------------------------
     bool isAlive();
@@ -68,12 +68,16 @@ public:
     std::vector<Move> getmoves(){
         return(moves);
     }
+    std::vector<std::string> getart(){
+        return(art);
+    }
 
 private:
     // std::string name;      //inherit from baseObject
     // std::string type;       //inherit from baseObject
     int HP;
     std::vector<Move> moves ;
+    std::vector<std::string> art;
 };
 
 
@@ -112,7 +116,7 @@ public:
     void turnswitch();
     void checkWin();
     int rollDice();
-    bool tossCoin();
+    // bool tossCoin();
 private:
     Player Player1;
     Player Player2;

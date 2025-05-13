@@ -1,18 +1,18 @@
 
 // Fucking AI JoB!!!!!!!!!!!!!!!!!!!!!!!!!
 
-
 #include <iostream>
 #include <vector>
 #include "game.h"
+// #include "game-settings.h"
 //max "_" 166
 //max "_" 166
 //max "1" 166
 //max "2" 166
 class BattleScreen {
 private:
-    int WIDTH = 166;
-    int HEIGHT = 30;
+    int WIDTH = 110;
+    int HEIGHT = 20;
     std::vector<std::string> screen;
 public:
     BattleScreen() {
@@ -67,7 +67,16 @@ public:
         for (int i = 0; i < line2.size(); ++i) screen[y + 2][x + 1 + i] = line2[i];
         for (int i = 0; i < line3.size(); ++i) screen[y + 3][x + 1 + i] = line3[i];
     }
-    
+
+    void drawMonster(int x, int y, const std::vector<std::string>& art) {
+        for (int i = 0; i < art.size(); ++i) {
+            for (int j = 0; j < art[i].size(); ++j) {
+                if (y + i < HEIGHT && x + j < WIDTH) {
+                    screen[y + i][x + j] = art[i][j];
+                }
+            }
+        }
+    }
 
     void render() {
         for (const std::string& line : screen) {
@@ -76,23 +85,27 @@ public:
     }
 
     // ฟังก์ชันอัปเดตข้อมูลเลย
-    void updateBattleScreen(std::string botPlayer, std::string botMonster, int botHP, int botMaxHP,
-                             std::string playerName, std::string playerMonster, int playerHP, int playerMaxHP) {
+    void updateBattleScreen(std::string Player1,std::vector<std::string> Player1Art, std::string Player1Monster, int Player1HP,
+                             std::string Player2,std::vector<std::string> Player2Art, std::string Player2Monster, int Player2HP) {
         clearScreen();
-
-        drawMonsterBox(1, 1, botPlayer, botMonster, botHP, botMaxHP); // มุมซ้ายบน
-        drawMonsterBox(WIDTH - 41, HEIGHT - 6, playerName, playerMonster, playerHP, playerMaxHP); // มุมขวาล่าง
+        
+        drawMonsterBox(1, 1, Player1, Player1Monster, Player1HP, 100); // มุมซ้ายบน
+        drawMonster(70, 1 , Player1Art);
+        drawMonsterBox(WIDTH - 41, HEIGHT - 6, Player2, Player2Monster, Player2HP, 100); // มุมขวาล่าง
+        drawMonster(WIDTH - 80, HEIGHT - 6 , Player2Art);
 
         render();
     }
+
+
 };
 
-int main(){
-    BattleScreen screen;
+// int main(){
+//     BattleScreen screen;
 
-    screen.updateBattleScreen(
-        "Bot", "Aquaril", 75, 100,  // ฝั่งศัตรู
-        "Player", "Flamo", 50, 100  // ฝั่งเรา
-    );
+//     screen.updateBattleScreen(
+//         "Bot", "Aquaril", 75, 100,  // ฝั่งศัตรู
+//         "Player", "Flamo", 50, 100  // ฝั่งเรา
+//     );
     
-}
+// }

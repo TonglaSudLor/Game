@@ -1,7 +1,7 @@
 #include "game.h"
 //----------Monster--------
-Monster::Monster(std::string name, std::string type, int HP, std::vector<Move> moves)  // Constructor
-    :  baseObject(name, type), HP(HP), moves(moves){}
+Monster::Monster(std::string name, std::string type, int HP, std::vector<Move> moves , std::vector<std::string> art ) // Constructor
+    :  baseObject(name, type), HP(HP), moves(moves), art(art){}
 
 void Monster::takeDamage(int amount){ // subtrac damage from HP
     HP -= amount;
