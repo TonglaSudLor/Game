@@ -2,7 +2,8 @@
 // #include "base_class.h"
 #include <vector>
 #include <string>
-
+#include <conio.h>
+#include <iostream>
 struct nameDisplay
 {  
     std::string name;
@@ -16,7 +17,9 @@ void clearConsole() {
         std::system("clear"); // For Unix-like systems
     #endif
     }
-
+void waitForAnyKey() { // func for wait for the user type anything to the terminal (for texts readability)
+    _getch(); 
+}
 
 class baseObject {
 private:
@@ -34,7 +37,7 @@ public:
     }
 };
 
-//Flamo, Aquaril, Terraplant, Zappy, Rocky, Mysty };
+
 
 class Move : public baseObject{ // first inheritance
 public:

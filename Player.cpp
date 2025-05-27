@@ -1,38 +1,11 @@
+
 #include "game.h"
-// #include "element-settings.h"
-// #include "game.cpp"
+#include "Move.cpp"
+#include "game.cpp"
 #include <iostream>
 
 
 
-double getTypeEffectiveness(const std::string& attackType, const std::string& targetType) {
-    if (attackType == "Fire") {
-        if (targetType == "Grass") return 1.5;
-        if (targetType == "Water" || targetType == "Rock") return 0.5;
-    }
-    if (attackType == "Water") {
-        if (targetType == "Fire" || targetType == "Rock") return 1.5;
-        if (targetType == "Grass" || targetType == "Electric") return 0.5;
-    }
-    if (attackType == "Grass") {
-        if (targetType == "Water" || targetType == "Rock") return 1.5;
-        if (targetType == "Fire") return 0.5;
-    }
-    if (attackType == "Electric") {
-        if (targetType == "Water") return 1.5;
-        if (targetType == "Grass" || targetType == "Rock") return 0.5;
-    }
-    if (attackType == "Rock") {
-        if (targetType == "Fire" || targetType == "Electric") return 1.5;
-        if (targetType == "Water" || targetType == "Grass") return 0.5;
-    }
-    if (attackType == "Psychic") {
-        if (targetType == "Electric" || targetType == "Rock") return 1.5;
-        if (targetType == "Psychic") return 0.5;
-    }
-
-    return 1.0; // Default ไม่มีผลแพ้ชนะ
-}
 
 
 
@@ -45,9 +18,9 @@ void Player::chooseAttack(int Dice, Player& opponent ) {  // choose attack
     Monster& attackerMon = team[currentMonster];
     Monster& defenderMon = opponent.team[opponent.currentMonster];
 
-    std::cout << getTeam()[getCurrent()].getName() << " choose to Attack!\n";
+    std::cout << getTeam()[getCurrent()].getName() << " choose to Attack!\n\n";
     // std::cout <<"rolling Dice.. "<< std::endl;
-    std::cout<< "your point is "<< Dice<<" Here're move(s) you can use"<< std::endl ;
+    std::cout<< "your point is "<< Dice<<" Here're move(s) you can use \n" ;
     std::vector<Move> moves = getTeam()[getCurrent()].getmoves();
 
     //---------------------------------Display alvailable move
@@ -63,12 +36,13 @@ void Player::chooseAttack(int Dice, Player& opponent ) {  // choose attack
         }
     }
     if(availableMoves.empty()){
-        std::cout<<" There's no move(s) that can be use. Passing the turn";
+        std::cout<<"\nThere's no move(s) that can be use. Passing the turn";
+        waitForAnyKey();
         return;
     }
     //-------------------------------Choose one of the move-----------
     int choosen;
-    std::cout <<std::endl <<"Enter the number of the move you want to use: ";
+    std::cout <<std::endl <<"\nEnter the number of the move you want to use: ";
     std::cin>> choosen;
     choosen--;
     if(choosen>= 0 && choosen< availableMoves.size()){
@@ -77,25 +51,29 @@ void Player::chooseAttack(int Dice, Player& opponent ) {  // choose attack
         
         int damage = selectedMove.getdamage();
         Monster& targetMonster = opponent.getTeam()[opponent.getCurrent()];
-        double multiplier = getTypeEffectiveness(selectedMove.getType(), targetMonster.getType()); //check the element
+        double multiplier = getTypeEffectiveness(selectedMove.getType(), targetMonster.getType()); //check the type
         damage = static_cast<int>(damage * multiplier);
 
         if (multiplier > 1.0) {
             std::cout << "It's super effective!\n";
+            waitForAnyKey();
         } else if (multiplier < 1.0) {
             std::cout << "It's not very effective...\n";
+            waitForAnyKey();
         }
 
-        int critical = rand() % 10;
+        int critical = rand() % 10; //10% chance of get a critical hit 
         if (critical == 0) {
             damage=damage*2;
+            std::cout << "Critical Hit! \n";
+            waitForAnyKey();
         }
-        std::cout << "Critical Hit! \n";
 
         targetMonster.takeDamage(damage);
         
-        if (!targetMonster.isAlive()) {
+        if (!targetMonster.isAlive()) {  // check if target still allive or not
             std::cout << targetMonster.getName() << " fainted!\n";
+            waitForAnyKey();
             opponent.switchMonster();  // switch monster
         }
     }
@@ -104,20 +82,21 @@ void Player::chooseAttack(int Dice, Player& opponent ) {  // choose attack
 
 
 void Player::switchMonster() {
+    // checkWin();
     clearConsole();
     std::cout << "Choose a monster to switch to: "<< std::endl;
     int index =1;
     for (auto a : team) {
-        std::cout<<index<<". "<<a.getName()<<" type : " << a.getHp()<< (!a.isAlive()? " - Fainted " : "")<<std::endl;
+        std::cout<<index<<". "<<a.getName()<<" type : " << a.getType() << " "<< a.getHp()<< (!a.isAlive()? " - Fainted " : "")<<std::endl;
         index++;
-        // const Monster& mon = team[i];
-        // std::cout << i + 1 << ". " << mon->getName() 
-        //           << " (HP: " << mon.getHp() 
-        //           << (!mon.isAlive() ? " - Fainted" : "") << ")\n";
+    }
+    int alive = 0;
+    for (auto a : team){
+        if (a.isAlive()) alive++;
     }
 
     int choose;
-    while (true) {
+    while (alive>0) {
         std::cout << "Enter the number of the monster you want to switch to: ";
         std::cin >> choose;
 
@@ -128,17 +107,14 @@ void Player::switchMonster() {
             std::cout << "Invalid input. Try again.\n";
             continue;
         }
-
         
         if (!team[choose - 1].isAlive()) {
             std::cout << team[choose - 1].getName() << " has fainted! Choose another.\n";
             continue;
         }
-
         break; 
     }
-
     currentMonster= choose - 1;
-    std::cout << "Switched to " << team[currentMonster].getName() << "!\n";
+    // std::cout << "Switched to " << team[currentMonster].getName() << "!\n";
 }
 

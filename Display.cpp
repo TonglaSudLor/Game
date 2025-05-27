@@ -1,5 +1,4 @@
 
-// Fucking AI JoB!!!!!!!!!!!!!!!!!!!!!!!!!
 
 #include <iostream>
 #include <vector>
